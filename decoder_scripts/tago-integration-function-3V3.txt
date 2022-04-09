@@ -1,0 +1,28 @@
+function Decoder(bytes, port, uplink_info) {
+  var liquid_level = bytes[0] << 8 | bytes[1];
+  var normalized;
+  var is_full;
+
+  if (liquid_level >= 1023) {
+    normalized = 0;
+    is_full = "Read Error - Please Dry Off Sensor";
+  }
+  else {
+    if (liquid_level >= 10 && liquid_level <= 400) {
+      normalized = Math.pow((liquid_level / 120), 2);
+      is_full = "Full";
+    }
+    else {
+      normalized = 0;
+      is_full = "Not Full";
+    }
+  }
+
+  var decoded = {
+    "liquid_level": liquid_level,
+    "is_full": is_full,
+    "liquid_level_normal": normalized
+  }
+
+  return decoded;
+}
